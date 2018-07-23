@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: TestHibernate
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: ddev
+Implementation-Vendor-Id: TestHibernate
+Build-Jdk: 1.8.0_151
+Implementation-URL: http://projects.spring.io/spring-boot/TestHibernat
+ e/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
