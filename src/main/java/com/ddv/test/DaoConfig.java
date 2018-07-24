@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 
+import com.ddv.test.dao.DaoSupport;
+
 @Configuration
 @Order(100)
 public class DaoConfig {
@@ -14,11 +16,11 @@ public class DaoConfig {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-    
-    @Bean
-    public HibernateTemplate template() {
-    	System.out.println("########################## " + sessionFactory);
-    	return new HibernateTemplate(sessionFactory); 
-    }
+	@Bean
+	public DaoSupport daoSupport() {
+		DaoSupport support = new DaoSupport();
+		support.setSessionFactory(sessionFactory);
+		return support;
+	}
 	
 }

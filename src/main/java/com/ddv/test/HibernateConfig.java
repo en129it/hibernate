@@ -49,7 +49,7 @@ public class HibernateConfig {
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;
     }
- 
+    
     private final Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
@@ -57,4 +57,5 @@ public class HibernateConfig {
  
         return hibernateProperties;
     }
+    
 }
