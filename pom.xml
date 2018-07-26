@@ -72,6 +72,10 @@
 		    <artifactId>tomcat-dbcp</artifactId>
 		    <version>9.0.1</version>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 	</dependencies>  
   
   <build>
@@ -85,6 +89,36 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.14.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+					<generateDirectory>${project.basedir}/gen/java</generateDirectory>
+					<generatePackage>com.ddv.test</generatePackage>
+				      <schemaIncludes>
+				        <include>test.xsd</include>
+				      </schemaIncludes>				      
+				      <args>
+				        <arg>-Xannotate</arg>
+				      </args>
+				      <plugins>
+				        <plugin>
+				            <groupId>org.jvnet.jaxb2_commons</groupId>
+				            <artifactId>jaxb2-basics-annotate</artifactId>
+				            <version>1.0.2</version>
+				        </plugin>
+				      </plugins>
+      				</configuration>
+			</plugin>
     </plugins>
   </build>
 </project>
