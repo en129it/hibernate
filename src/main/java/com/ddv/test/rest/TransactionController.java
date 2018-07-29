@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ddv.test.entity.Lock;
 import com.ddv.test.entity.Transaction;
 import com.ddv.test.model.TxnSearchFilter;
 import com.ddv.test.service.TransactionService;
@@ -35,9 +36,19 @@ public class TransactionController {
 		
 	}
 	
-	@RequestMapping(path="txn", method=RequestMethod.GET, consumes=MediaType.APPLICATION_JSON_UTF8_VALUE, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<Transaction> getTxns(@RequestBody TxnSearchFilter aFilter) {
+	@RequestMapping(path="txn", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<Transaction> getTxns() {
 		return service.findTransactions();
+	}
+
+	@RequestMapping(path="txn/insertdata", method=RequestMethod.GET)
+	public void init() {
+		service.init();
+	}
+
+	@RequestMapping(path="txn/firstlock", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public Lock findFirstLock() {
+		return service.findFirstLock();
 	}
 	
 }

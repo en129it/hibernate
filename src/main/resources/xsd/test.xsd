@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/test/" targetNamespace="http://www.example.org/test/">
+
+    <element name="MyRequest">
+	    <complexType>
+	    	<sequence>
+	            <element name="id" type="string"></element>
+	            <element name="header" type="tns:HeaderType"></element>
+	            <element name="country" type="tns:CountryType"></element>
+	            
+	    	</sequence>
+	    </complexType>
+    </element>
+
+    <complexType name="HeaderType">
+    	<sequence>
+    		<element name="from" type="string"></element>
+    		<element name="to" type="string"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="CountryType">
+    	<sequence>
+    		<element name="isoCode" type="string"></element>
+    		<element name="name" type="string"></element>
+    	</sequence>
+    </complexType>
+</schema>

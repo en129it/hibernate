@@ -1,0 +1,7 @@
+---
+applications:
+- name: test-hibernate
+  memory: 1G
+  random-route: true
+  path: target/TestHibernate-0.0.1-SNAPSHOT.jar
+

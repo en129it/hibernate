@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="LOCK")
+@Table(name="TXNLOCK")
 public class Lock {
 
 	@Id
@@ -23,5 +23,37 @@ public class Lock {
 	
 	@Column(name="ACTION", length=20)
 	private String action;
+
+	public Long getTxnId() {
+		return txnId;
+	}
+
+	public void setTxnId(Long txnId) {
+		this.txnId = txnId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Date getStartTimestamp() {
+		return startTimestamp;
+	}
+
+	public void setStartTimestamp(Date startTimestamp) {
+		this.startTimestamp = startTimestamp;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
 	
 }

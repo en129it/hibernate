@@ -1,5 +1,5 @@
 package com.ddv.test;
-
+/*
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,13 +10,13 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+*/
 
-
-@Configuration
+//@Configuration
 public class RedisConfig {
 
 	private static final String APPSYNC_CHANNEL_NAME = "AppSync"; 
-
+/*
 	@Bean
 	public RedisConnectionFactory connectionFactory(@Value("redis.host") String anHost, @Value("redis.port") int aPort, @Value("redis.timeout") int aTimeoutInMsec) {
 		JedisConnectionFactory rslt = new JedisConnectionFactory();
@@ -37,8 +37,8 @@ public class RedisConfig {
 	public RedisMessageListenerContainer messageListenerContainer(RedisConnectionFactory aConnectionFactory) {
 		RedisMessageListenerContainer rslt = new RedisMessageListenerContainer();
 		rslt.setConnectionFactory(aConnectionFactory);
-		rslt.addMessageListener(new MessageListenerAdapter(aMessageListener), new ChannelTopic(APPSYNC_CHANNEL_NAME));
+//		rslt.addMessageListener(new MessageListenerAdapter(aMessageListener), new ChannelTopic(APPSYNC_CHANNEL_NAME));
 		return rslt;
 	}
-	
+	*/
 }

@@ -1,5 +1,7 @@
 package com.ddv.test.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -10,6 +12,7 @@ import org.springframework.orm.hibernate5.HibernateCallback;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.ddv.test.entity.Lock;
 import com.ddv.test.entity.Transaction;
 
 @Repository
@@ -28,4 +31,52 @@ public class TransactionDao {
 		});
 	}
 	
+	public void init() {
+		ArrayList<Lock> locks = new ArrayList<Lock>();
+		
+		for (long i=0; i<100; i++) {
+			Lock lock1 = new Lock();
+			lock1.setTxnId(i);
+			lock1.setUserId(1000L + i);
+			lock1.setStartTimestamp(new Date());
+			lock1.setAction("REPAIR");
+			locks.add(lock1);
+		}
+		
+		int count = 0;
+		for (Lock lock : locks) {
+			daoSupport.getHibernateTemplate().persist(lock);
+			count++;
+/*			
+			if (count%10 == 0) {
+				daoSupport.getHibernateTemplate().flush();
+				daoSupport.getHibernateTemplate().clear();
+			}
+*/			
+			
+		}
+//		daoSupport.getHibernateTemplate().clear();
+/*		
+		int count = 0;
+		for (Lock lock : locks) {
+			daoSupport.getHibernateTemplate().persist(lock);
+			count++;
+			if (count%10 == 0) {
+				session
+			}
+			
+			
+		}
+		*/
+	}
+	
+	public Lock getFirstLock() {
+		return daoSupport.getHibernateTemplate().execute(new HibernateCallback<Lock>() {
+			@Override
+			public Lock doInHibernate(Session session) throws HibernateException {
+				System.out.println("execute query");
+				return (Lock)session.createQuery("from " + Lock.class.getSimpleName() + " where txnId=1").getSingleResult();
+			}
+		});
+	}
 }
