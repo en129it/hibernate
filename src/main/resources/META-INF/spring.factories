@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.ddv.test.MyFlyWayAutoConfiguration
+com.ddv.test.MyFlywayAutoConfiguration

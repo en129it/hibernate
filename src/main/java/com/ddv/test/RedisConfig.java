@@ -15,6 +15,8 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 //@Configuration
 public class RedisConfig {
 
+	// https://docs.run.pivotal.io/buildpacks/java/configuring-service-connections/spring-service-bindings.html
+	
 	private static final String APPSYNC_CHANNEL_NAME = "AppSync"; 
 /*
 	@Bean

@@ -1,5 +1,6 @@
 package com.ddv.test.dao;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +39,7 @@ public class TransactionDao {
 			Lock lock1 = new Lock();
 			lock1.setTxnId(i);
 			lock1.setUserId(1000L + i);
-			lock1.setStartTimestamp(new Date());
+			lock1.setStartTimestamp(LocalDate.now());
 			lock1.setAction("REPAIR");
 			locks.add(lock1);
 		}
