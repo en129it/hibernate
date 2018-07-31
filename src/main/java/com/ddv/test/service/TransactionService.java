@@ -73,4 +73,8 @@ public class TransactionService {
 	public Lock findFirstLock() {
 		return dao.getFirstLock();
 	}
+	
+	public int deleteAllLocks() {
+		return dao.deleteAllLocks();
+	}
 }

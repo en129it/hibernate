@@ -50,6 +50,12 @@ public class TransactionController {
 	public Lock findFirstLock() {
 		return service.findFirstLock();
 	}
+
+	@RequestMapping(path="txn/delealllocks", method=RequestMethod.GET)
+	public void deleteAllLocks() {
+		int rslt = service.deleteAllLocks();
+		System.out.println("####### nb deleted locks = " + rslt);
+	}
 	
 }
 

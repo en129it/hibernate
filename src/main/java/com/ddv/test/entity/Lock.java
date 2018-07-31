@@ -1,6 +1,7 @@
 package com.ddv.test.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,7 +21,7 @@ public class Lock {
 	private Long userId;
 	
 	@Column(name="START_TIMESTAMP")
-	private LocalDate startTimestamp;
+	private LocalDateTime startTimestamp;
 	
 	@Column(name="ACTION", length=20)
 	private String action;
@@ -41,11 +42,11 @@ public class Lock {
 		this.userId = userId;
 	}
 
-	public LocalDate getStartTimestamp() {
+	public LocalDateTime getStartTimestamp() {
 		return startTimestamp;
 	}
 
-	public void setStartTimestamp(LocalDate startTimestamp) {
+	public void setStartTimestamp(LocalDateTime startTimestamp) {
 		this.startTimestamp = startTimestamp;
 	}
 
