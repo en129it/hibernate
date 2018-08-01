@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ddv.test.entity.Lock;
+import com.ddv.test.entity.Lock.Tmp;
 import com.ddv.test.entity.Transaction;
 
 @Repository
@@ -35,14 +36,22 @@ public class TransactionDao {
 	}
 	
 	public void init() {
+		System.out.println("################### START INIT");
 		ArrayList<Lock> locks = new ArrayList<Lock>();
 		
 		for (long i=0; i<100; i++) {
 			Lock lock1 = new Lock();
 			lock1.setTxnId(i);
 			lock1.setUserId(1000L + i);
-			lock1.setStartTimestamp(LocalDateTime.now());
-			lock1.setAction("REPAIR");
+			
+			Tmp aTmp = new Tmp();
+			aTmp.setStartTimestamp(LocalDateTime.now());
+			aTmp.setAction("REPAIR");
+
+			
+			lock1.setTmp(aTmp);
+//			lock1.setStartTimestamp(LocalDateTime.now());
+//			lock1.setAction("REPAIR");
 			locks.add(lock1);
 		}
 		
@@ -71,6 +80,7 @@ public class TransactionDao {
 			
 		}
 		*/
+		System.out.println("################### END INIT");
 	}
 	
 	public Lock getFirstLock() {

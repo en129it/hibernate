@@ -4,7 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.h2.Driver;
+import org.h2.jdbcx.JdbcDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,13 @@ public class HibernateConfig {
 
     @Bean
     public DataSource dataSource() {
+    	JdbcDataSource ds = new JdbcDataSource();
+    	ds.setURL("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
+    	ds.setUser("sa");
+    	ds.setPassword("sa");
+    	return ds;
+/*    	
+    	Driver driver;
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUrl("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
@@ -41,6 +49,7 @@ public class HibernateConfig {
         dataSource.setPassword("sa");
  
         return dataSource;
+        */
     }
  	
     @Bean

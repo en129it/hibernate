@@ -1,15 +1,13 @@
 package com.ddv.test.util;
 
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class ScheduledTasks {
 
 	
-	@Scheduled(fixedDelay=100)
+//	@Scheduled(fixedDelay=10000)
 	public void schedule() {
-		System.out.println("#### schedule " + System.currentTimeMillis());
+//		System.out.println("#### schedule " + System.currentTimeMillis());
 	}
 	
 }

@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,13 +25,15 @@ import com.ddv.test.entity.Lock;
 import com.ddv.test.entity.Transaction;
 
 @Service
-@javax.transaction.Transactional
+//@javax.transaction.Transactional
 public class TransactionService {
 
 	@Autowired
 	private TransactionDao dao;
 	@Autowired
 	private RestTemplate template;
+	@Autowired
+	private RedisConnectionFactory factory;
 	
 	@PersistenceContext
 	private EntityManager manager;
@@ -66,8 +69,16 @@ public class TransactionService {
 		return dao.findTransactions();
 	}	
 	
+	@Transactional
 	public void init() {
 		dao.init();
+		
+		
+		System.out.println("######### factory " + factory);
+		factory.getConnection().set("toto".getBytes(), "45".getBytes());
+		String rslt = new String(factory.getConnection().get("toto".getBytes()));
+		System.out.println("######### rslt " + rslt);
+		
 	}
 	
 	public Lock findFirstLock() {

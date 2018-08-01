@@ -1,6 +1,7 @@
 package com.ddv.test;
-/*
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.config.java.AbstractCloudConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.MessageListener;
@@ -10,25 +11,31 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-*/
 
-//@Configuration
-public class RedisConfig {
+
+@Configuration
+public class RedisConfig extends AbstractCloudConfig  {
 
 	// https://docs.run.pivotal.io/buildpacks/java/configuring-service-connections/spring-service-bindings.html
+	// https://docs.spring.io/spring-data/redis/docs/2.1.0.M3/reference/html/
 	
 	private static final String APPSYNC_CHANNEL_NAME = "AppSync"; 
-/*
+
 	@Bean
-	public RedisConnectionFactory connectionFactory(@Value("redis.host") String anHost, @Value("redis.port") int aPort, @Value("redis.timeout") int aTimeoutInMsec) {
-		JedisConnectionFactory rslt = new JedisConnectionFactory();
+	public RedisConnectionFactory redisFactory() {
+	    return connectionFactory().redisConnectionFactory();
+	}	
+/*	
+	@Bean
+	public RedisConnectionfactory connectionfactory(@value("redis.host") string anhost, @value("redis.port") int aport, @value("redis.timeout") int atimeoutinmsec) {
+		jedisconnectionFactory rslt = new JedisConnectionFactory();
 		rslt.setHostName(anHost);
 		rslt.setPort(aPort);
 		rslt.setTimeout(aTimeoutInMsec);
 		rslt.setUsePool(true);
 		return rslt;
 	}
-
+*/
 	@Bean
 	public StringRedisTemplate redisTemplate(RedisConnectionFactory aConnectionFactory) {
 		StringRedisTemplate rslt = new StringRedisTemplate(aConnectionFactory);
@@ -42,5 +49,5 @@ public class RedisConfig {
 //		rslt.addMessageListener(new MessageListenerAdapter(aMessageListener), new ChannelTopic(APPSYNC_CHANNEL_NAME));
 		return rslt;
 	}
-	*/
+
 }

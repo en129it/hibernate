@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -20,12 +22,9 @@ public class Lock {
 	@Column(name="USER_ID", precision=0)
 	private Long userId;
 	
-	@Column(name="START_TIMESTAMP")
-	private LocalDateTime startTimestamp;
+	@Embedded
+	private Tmp tmp;
 	
-	@Column(name="ACTION", length=20)
-	private String action;
-
 	public Long getTxnId() {
 		return txnId;
 	}
@@ -42,20 +41,37 @@ public class Lock {
 		this.userId = userId;
 	}
 
-	public LocalDateTime getStartTimestamp() {
-		return startTimestamp;
+	public Tmp getTmp() {
+		return tmp;
 	}
-
-	public void setStartTimestamp(LocalDateTime startTimestamp) {
-		this.startTimestamp = startTimestamp;
-	}
-
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
+	public void setTmp(Tmp aTmp) {
+		tmp = aTmp;
 	}
 	
+	@Embeddable
+	public static class Tmp {
+		@Column(name="START_TIMESTAMP")
+		private LocalDateTime startTimestamp;
+		
+		@Column(name="ACTION", length=20)
+		private String action;
+
+
+		public LocalDateTime getStartTimestamp() {
+			return startTimestamp;
+		}
+
+		public void setStartTimestamp(LocalDateTime startTimestamp) {
+			this.startTimestamp = startTimestamp;
+		}
+
+		public String getAction() {
+			return action;
+		}
+
+		public void setAction(String action) {
+			this.action = action;
+		}
+		
+	}
 }
