@@ -20,6 +20,7 @@ public class RedisConfig extends AbstractCloudConfig  {
 	// https://docs.spring.io/spring-data/redis/docs/2.1.0.M3/reference/html/
 	// https://github.com/pivotal-cf/cloudfoundry-certificate-truster/blob/master/src/main/java/io/pivotal/springcloud/ssl/SslCertificateTruster.java
 	// https://github.com/redisson/redisson
+	// https://spring.io/blog/2015/04/27/binding-to-data-services-with-spring-boot-in-cloud-foundry
 	
 	private static final String APPSYNC_CHANNEL_NAME = "AppSync"; 
 
