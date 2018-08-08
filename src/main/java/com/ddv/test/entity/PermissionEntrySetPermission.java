@@ -22,7 +22,7 @@ public class PermissionEntrySetPermission {
 	@Column(name="PERMISSION_ID", length=50)
 	private String permissionId;
 	
-	@Column(name="PERMISSION_ID", length=22)
+	@Column(name="TXN_TYPE_ID", length=22)
 	private String txnTypeId;
 
 	public Long getPermissionEntrySetPermissionId() {

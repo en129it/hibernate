@@ -2,6 +2,7 @@ package com.ddv.test;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -13,7 +14,8 @@ import com.ddv.test.dao.DaoSupport;
 @Order(100)
 public class DaoConfig {
 
-	@Autowired
+	@Autowired()
+	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
 
 	@Bean

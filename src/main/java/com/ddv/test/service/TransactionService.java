@@ -34,13 +34,13 @@ public class TransactionService {
 	private RestTemplate template;
 	@Autowired
 	private RedisConnectionFactory factory;
-	
+/*	
 	@PersistenceContext
 	private EntityManager manager;
-	
+*/	
 	public List<Transaction> findTransactions() {
 		
-		System.out.println("#### entityManager " + manager);
+//		System.out.println("#### entityManager " + manager);
 		
 		
 		String url = "http://localhost:8192/api/test";
@@ -69,16 +69,16 @@ public class TransactionService {
 		return dao.findTransactions();
 	}	
 	
-	@Transactional
+	@Transactional(transactionManager="appTransactionManager")
 	public void init() {
 		dao.init();
 		
-		
+/*		
 		System.out.println("######### factory " + factory);
 		factory.getConnection().set("toto".getBytes(), "45".getBytes());
 		String rslt = new String(factory.getConnection().get("toto".getBytes()));
 		System.out.println("######### rslt " + rslt);
-		
+*/		
 	}
 	
 	public Lock findFirstLock() {
