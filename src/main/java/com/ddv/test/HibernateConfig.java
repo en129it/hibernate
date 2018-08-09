@@ -74,21 +74,22 @@ Call flyway during data source creation
 	@Autowired
 	@Qualifier("appDataSource")
 	private DataSource dataSource;
+/*	
 	@Autowired
 	@Qualifier("iiiDataSource")
 	private DataSource iiiDataSource;
-	
+*/	
 	@Bean(name="sessionFactory")
-	public LocalSessionFactoryBean sessionFactory() {
+	public LocalSessionFactoryBean sessionFactory(@Qualifier("hibernateProperties") Properties hibernateProperties) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan("com.ddv.test.entity");
-        sessionFactory.setHibernateProperties(hibernateProperties());
+        sessionFactory.setHibernateProperties(hibernateProperties);
  
         return sessionFactory;
 	}
 
-	
+/*	
 	@Bean(name="iiiSessionFactory")
 	public LocalSessionFactoryBean iiiSessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -98,7 +99,7 @@ Call flyway during data source creation
  
         return sessionFactory;
 	}
-	
+*/	
     @Bean(name="appTransactionManager")
     public PlatformTransactionManager hibernateTransactionManager(@Qualifier("sessionFactory") LocalSessionFactoryBean sessionFactory) {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
@@ -106,14 +107,14 @@ Call flyway during data source creation
         return transactionManager;
     }
 
-	
+/*	
     @Bean(name="iiiTransactionManager")
     public PlatformTransactionManager iiiHibernateTransactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(iiiSessionFactory().getObject());
         return transactionManager;
     }
-    
+ */   
     private final Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
 //        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");

@@ -1,8 +1,11 @@
 package com.ddv.test;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcDataSource;
+import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -11,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("!cloud")
 public class HibernateConfigLocal {
+		@FlywayDataSource
 	    @Bean(name="appDataSource")
 	    public DataSource appDataSource() {
 	    	System.out.println("##### appDataSource creation");
@@ -24,7 +28,16 @@ public class HibernateConfigLocal {
 	    	//return null;
 	    }
 
-		
+		@Bean("hibernateProperties")
+	    public Properties hibernateProperties() {
+	        Properties hibernateProperties = new Properties();
+//	        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+	        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+	 
+	        return hibernateProperties;
+	    }
+
+/*		
 	    @Bean(name="iiiDataSource")
 	    public DataSource iiiDataSource() {
 	    	System.out.println("##### iiiDataSource creation");
@@ -37,4 +50,5 @@ public class HibernateConfigLocal {
 	    	
 	    	// return null;
 	    }
+	    */
 }
