@@ -24,6 +24,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class HibernateConfig {
 	
 /*
+https://flywaydb.org/documentation/commandline/migrate#baselineOnMigrate
+https://docs.oracle.com/cd/B10501_01/win.920/a97249/ch3.htm
+
  @FlywayDataSource
 
  Flyway flyway = new Flyway();
