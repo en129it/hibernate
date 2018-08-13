@@ -13,11 +13,15 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
+import com.ddv.test.service.IEventReplicator;
+import com.ddv.test.service.IdGenerator;
+import com.ddv.test.service.RedisEventReplicator;
+import com.ddv.test.service.RedisIdGenerator;
 
-//@Configuration
-//@Profile("cloud")
-public class RedisConfig 
-//extends AbstractCloudConfig  
+
+@Configuration
+@Profile("cloud")
+public class RedisConfig extends AbstractCloudConfig  
 {
 
 	// https://docs.run.pivotal.io/buildpacks/java/configuring-service-connections/spring-service-bindings.html
@@ -25,26 +29,14 @@ public class RedisConfig
 	// https://github.com/pivotal-cf/cloudfoundry-certificate-truster/blob/master/src/main/java/io/pivotal/springcloud/ssl/SslCertificateTruster.java
 	// https://github.com/redisson/redisson
 	// https://spring.io/blog/2015/04/27/binding-to-data-services-with-spring-boot-in-cloud-foundry
-/*	
+
 	private static final String APPSYNC_CHANNEL_NAME = "AppSync"; 
 
 	@Bean
 	public RedisConnectionFactory redisFactory() {
 	    return connectionFactory().redisConnectionFactory();
 	}
-*/		
-/*	
-	@Bean
-	public RedisConnectionfactory connectionfactory(@value("redis.host") string anhost, @value("redis.port") int aport, @value("redis.timeout") int atimeoutinmsec) {
-		jedisconnectionFactory rslt = new JedisConnectionFactory();
-		rslt.setHostName(anHost);
-		rslt.setPort(aPort);
-		rslt.setTimeout(aTimeoutInMsec);
-		rslt.setUsePool(true);
-		return rslt;
-	}
-*/
-	/*
+	
 	@Bean
 	public StringRedisTemplate redisTemplate(RedisConnectionFactory aConnectionFactory) {
 		StringRedisTemplate rslt = new StringRedisTemplate(aConnectionFactory);
@@ -52,11 +44,27 @@ public class RedisConfig
 	}
 	
 	@Bean
-	public RedisMessageListenerContainer messageListenerContainer(RedisConnectionFactory aConnectionFactory) {
+	public RedisMessageListenerContainer messageListenerContainer(RedisConnectionFactory aConnectionFactory, ChannelTopic aTopic, RedisEventReplicator aMessageListener) {
 		RedisMessageListenerContainer rslt = new RedisMessageListenerContainer();
 		rslt.setConnectionFactory(aConnectionFactory);
-//		rslt.addMessageListener(new MessageListenerAdapter(aMessageListener), new ChannelTopic(APPSYNC_CHANNEL_NAME));
+		rslt.addMessageListener(aMessageListener, aTopic);
 		return rslt;
 	}
-*/
+
+	@Bean
+	public ChannelTopic eventChannelTopic() {
+		return new ChannelTopic(APPSYNC_CHANNEL_NAME);
+	}
+	
+	@Bean
+	public IdGenerator createIdGenerator(RedisConnectionFactory aConnectionFactory) {
+		RedisIdGenerator rslt = new RedisIdGenerator(aConnectionFactory);
+		return rslt;
+	}
+	
+	@Bean
+	public RedisEventReplicator createEventReplicator(StringRedisTemplate aRedisTemplate, ChannelTopic aTopic) {
+		RedisEventReplicator rslt = new RedisEventReplicator(aRedisTemplate, aTopic);
+		return rslt;
+	}
 }

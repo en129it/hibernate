@@ -10,6 +10,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
+import org.hibernate.internal.SessionImpl;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateCallback;
@@ -17,7 +18,11 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ddv.test.entity.Lock;
+import com.ddv.test.entity.PermissionEntrySetPermission;
 import com.ddv.test.entity.Lock.Tmp;
+import com.ddv.test.entity.PermissionEntrySet;
+import com.ddv.test.entity.PermissionEntrySetAccount;
+import com.ddv.test.model.Permission;
 import com.ddv.test.entity.Transaction;
 
 @Repository
@@ -42,7 +47,6 @@ public class TransactionDao {
 		
 		for (long i=0; i<100; i++) {
 			Lock lock1 = new Lock();
-			lock1.setTxnId(i);
 			lock1.setUserId(1000L + i);
 			
 			Tmp aTmp = new Tmp();
@@ -51,23 +55,24 @@ public class TransactionDao {
 
 			
 			lock1.setTmp(aTmp);
-//			lock1.setStartTimestamp(LocalDateTime.now());
-//			lock1.setAction("REPAIR");
 			locks.add(lock1);
 		}
 		
-		int count = 0;
-		for (Lock lock : locks) {
-			daoSupport.getHibernateTemplate().persist(lock);
-			count++;
-/*			
-			if (count%10 == 0) {
-				daoSupport.getHibernateTemplate().flush();
-				daoSupport.getHibernateTemplate().clear();
+//		StatelessSession statelessSession = daoSupport.getHibernateTemplate().getSessionFactory().openStatelessSession();
+/*		
+		StatelessSession statelessSession = daoSupport.getSessionFactory().openStatelessSession();
+		try {
+			int count = 0;
+			for (Lock lock : locks) {
+//				daoSupport.getHibernateTemplate().persist(lock);
+				count++;
+				statelessSession.insert(lock);
 			}
-*/			
-			
+		} finally {
+			statelessSession.close();
 		}
+*/		
+		
 //		daoSupport.getHibernateTemplate().clear();
 /*		
 		int count = 0;
@@ -81,6 +86,35 @@ public class TransactionDao {
 			
 		}
 		*/
+		
+		PermissionEntrySet entry = new PermissionEntrySet();
+		entry.setGlobalSessionId("TITI_GUID");
+		entry.setLastAccessTimestamp(LocalDateTime.now());
+		daoSupport.getHibernateTemplate().saveOrUpdate(entry);
+		daoSupport.getHibernateTemplate().flush();
+		daoSupport.getHibernateTemplate().evict(entry);
+		
+		SessionFactory sessionFactory = daoSupport.getHibernateTemplate().getSessionFactory();
+		SessionImpl session = (SessionImpl)sessionFactory.getCurrentSession();
+		
+		StatelessSession statelessSession = daoSupport.getHibernateTemplate().getSessionFactory().openStatelessSession(session.connection());
+		try {
+			for (long i=0; i<4; i++) {
+				PermissionEntrySetAccount acct = new PermissionEntrySetAccount();
+				acct.setAccountId(i);
+				acct.setAccountName("acct" + i);
+				acct.setPtgCode("pgt"+ i);
+				acct.setPermissionEntrySet(entry);
+				statelessSession.insert(acct);
+					
+			}
+		} finally {
+			statelessSession.close();
+		}
+		
+		
+		
+		
 		System.out.println("################### END INIT");
 	}
 	

@@ -24,6 +24,7 @@ public class SseController {
 	
     @RequestMapping(path="/sse/subscribe", method=RequestMethod.GET)
 	public SseEmitter subscribe(HttpServletRequest aRequest) {
+    	System.out.println("############################### subscribe");
 		return sseService.createSseEmitterForSession(createHttpSession(aRequest).getId());
 	}
 

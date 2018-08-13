@@ -2,6 +2,11 @@ flyway:
    enabled: true
    baselineOnMigrate: true
    baselineVersion: 1
+
+spring.flyway:
+   enabled: true
+   baselineOnMigrate: true
+   baselineVersion: 1
    
 #   user: sa
 #   password: sa
@@ -10,3 +15,5 @@ flyway:
 hibernate.jdbc.batch_size: 50
 
 spring.datasource.initialize: false
+
+event.cache.capacity: 100

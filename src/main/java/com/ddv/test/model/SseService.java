@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class SseService {
 		while (iter.hasNext()) {
 			entry = iter.next();
 			if (entry.getValue().equals(anEmitter)) {
+				System.out.println("Remove emitter " + entry.getKey());
 				iter.remove();
 				break;
 			}
@@ -40,10 +42,14 @@ public class SseService {
 	
 	public synchronized void emitEvent(TxnSseEvent anEvent) {
 		ArrayList<SseEmitter> brokenEmitterList = null; 
-		for (SseEmitter emitter : sessionIdToSseEmitterMap.values()) {
+		for (Map.Entry<String, SseEmitter> entry : sessionIdToSseEmitterMap.entrySet()) {
+			SseEmitter emitter = entry.getValue();
 			try {
 				emitter.send(anEvent, MediaType.APPLICATION_JSON_UTF8);
+				System.out.println("Emit succeeded " + entry.getKey());
 			} catch (Exception ex) {
+				System.out.println("Error during emit");
+				ex.printStackTrace();
 				if (brokenEmitterList==null) {
 					brokenEmitterList = new ArrayList<SseEmitter>();
 				}

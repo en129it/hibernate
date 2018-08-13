@@ -5,6 +5,15 @@ public class TxnSseEvent {
 	private String eventType;
 	private Long txnId;
 	
+	public TxnSseEvent() {
+		
+	}
+	
+	public TxnSseEvent(String eventType, Long txnId) {
+		this.eventType = eventType;
+		this.txnId = txnId;
+	}
+	
 	public String getEventType() {
 		return eventType;
 	}

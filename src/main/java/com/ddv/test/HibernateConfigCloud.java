@@ -40,7 +40,7 @@ public class HibernateConfigCloud extends AbstractCloudConfig {
 	    	System.out.println("##### appDataSource creation " + ds);
 	    	
 	    	Connection conn = null;
-
+/*
 	    	try {
 	    		conn = ds.getConnection();
 		    	DatabaseMetaData md = conn.getMetaData();
@@ -90,14 +90,20 @@ public class HibernateConfigCloud extends AbstractCloudConfig {
 	    		}
 	    	}
 
-	    	
+*/	    	
 	    	try {
+	    		String[] drops = {"drop table flyway_schema_history", "drop table TXNLOCK", "drop table TRANSACTION", "drop table PERMISSION_ENTRY_SET_ACCT", "drop table PERMISSION_ENTRY_SET"};
 	    		conn = ds.getConnection();
-	    		Statement stmt = conn.createStatement();
+	    		
+	    		for (int i=0; i<drops.length; i++) {
+		    		Statement stmt = conn.createStatement();
+		    		try {
+		    			stmt.executeUpdate(drops[i]);
+		    		} finally {
+		    			stmt.close();
+		    		}
+	    		}
 	    	      
-	    	      String sql = "drop table flyway_schema_history"; 
-
-	    	      stmt.executeUpdate(sql);
 	  	    	System.out.println("##### drop flyway history done");
     		} catch (Exception ex) {
     			ex.printStackTrace();
@@ -118,7 +124,7 @@ public class HibernateConfigCloud extends AbstractCloudConfig {
 	    public Properties hibernateProperties() {
 	        Properties hibernateProperties = new Properties();
 //	        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-	        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+	        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 	 
 	        return hibernateProperties;
 	    }
