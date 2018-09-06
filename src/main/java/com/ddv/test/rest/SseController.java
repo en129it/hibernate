@@ -1,6 +1,7 @@
 package com.ddv.test.rest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,13 @@ public class SseController {
 	@Autowired
 	private SseService sseService;
 	
-    @RequestMapping(path="/sse/subscribe", method=RequestMethod.GET)
-	public SseEmitter subscribe(HttpServletRequest aRequest) {
-    	System.out.println("############################### subscribe");
-		return sseService.createSseEmitterForSession(createHttpSession(aRequest).getId());
+    @RequestMapping(path="proxy/sse/subscribe", method=RequestMethod.GET)
+	public SseEmitter subscribe(HttpServletRequest aRequest, HttpServletResponse aResponse) throws Exception {
+    	aResponse.sendRedirect("https://www.google.com");
+    	return null;
+    	
+//    	System.out.println("############################### subscribe");
+//		return sseService.createSseEmitterForSession(createHttpSession(aRequest).getId());
 	}
 
 	private HttpSession createHttpSession(HttpServletRequest aRequest) {

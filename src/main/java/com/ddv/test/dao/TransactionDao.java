@@ -58,6 +58,17 @@ public class TransactionDao {
 			locks.add(lock1);
 		}
 		
+		
+		Transaction txn = new Transaction();
+		txn.setType("Toto");
+		
+		ArrayList<String> longTypes = new ArrayList<String>();
+		txn.setLongTypes(longTypes);
+		longTypes.add("Long1");
+		longTypes.add("Long2");
+		longTypes.add("Long3");
+		
+		
 //		StatelessSession statelessSession = daoSupport.getHibernateTemplate().getSessionFactory().openStatelessSession();
 /*		
 		StatelessSession statelessSession = daoSupport.getSessionFactory().openStatelessSession();

@@ -12,13 +12,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * RedisEventReplicator is an {@link IEventReplicator} that relies upon the 
+ * Redis Topics and Publish/Subscribe facilities to exchange events with the 
+ * other running instances of this application. 
+ *
+ */
 public class RedisEventReplicator implements IEventReplicator, MessageListener {
-
+	/** The Java to JSON bi-directional converter. */
 	private ObjectMapper objectMapper = new ObjectMapper();
+	/** The callback to be notified each time an external running application instance generated an event. */
 	private EventDeliveryCallback eventDeliveryCallback;
+	/** The Redis template that facilitates the communication with Redis. */
 	private StringRedisTemplate redisTemplate;
+	/** The Redis topic channel on which the events will be exchanged between the different running instances of this application. */
 	private ChannelTopic channel;
 
+	/**
+	 * Create a new RedisEventReplicator instance.
+	 * @param aRedisTemplate Non-null Redis template that facilitates the 
+	 * communication with Redis. 
+	 * @param aChannel Non-null Redis topic channel on which the events will be
+	 * exchanged between the different running instances of this application.
+	 */
 	public RedisEventReplicator(StringRedisTemplate aRedisTemplate, ChannelTopic aChannel) {
 		redisTemplate = aRedisTemplate;
 		channel = aChannel;
@@ -52,33 +68,63 @@ public class RedisEventReplicator implements IEventReplicator, MessageListener {
 		} catch (IOException ex) {
 			
 		}
-}
+	}
 
+	/**
+	 * IdentifiableTxnSseEvent assigns an event with an unique identifier.
+	 *
+	 */
 	public static class IdentifiableTxnSseEvent {
+		/** The unique identifier assigned to the event. */
 		private int id;
+		/** The event. */
 		private TxnSseEvent event;
 		
+		/**
+		 * Create a new IdentifiableTxnSseEvent instance.
+		 */
 		public IdentifiableTxnSseEvent() {
-			
+			// default constructor
 		}
 		
+		/**
+		 * Create a new IdentifiableTxnSseEvent instance.
+		 * @param anId The unique identifier assigned to the event.
+		 * @param anEvent Non-null event.
+		 */
 		public IdentifiableTxnSseEvent(int anId, TxnSseEvent anEvent) {
 			id = anId;
 			event = anEvent;
 		}
 
+		/**
+		 * Get the unique identifier assigned to the event.
+		 * @return An identifier.
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * Set the unique identifier assigned to the event.
+		 * @param id Identifier.
+		 */
 		public void setId(int id) {
 			this.id = id;
 		}
 
+		/**
+		 * Get the event.
+		 * @return Non-null event.
+		 */
 		public TxnSseEvent getEvent() {
 			return event;
 		}
 
+		/**
+		 * Set the event
+		 * @param event Non-null event.
+		 */
 		public void setEvent(TxnSseEvent event) {
 			this.event = event;
 		}

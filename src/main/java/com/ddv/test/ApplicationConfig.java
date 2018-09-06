@@ -7,12 +7,19 @@ import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.ddv.test.service.SimpleIdGenerator;
+
 @Configuration
 public class ApplicationConfig {
 
 	@Bean
 	public RestTemplate endpointSrvcRestTemplate() {
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public SimpleIdGenerator createIdGenerator() {
+		return new SimpleIdGenerator();
 	}
 }
 /*

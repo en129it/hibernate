@@ -30,12 +30,14 @@ public class EventService {
 
 	@PostConstruct
 	public void initService() {
-		eventReplicator.subscribe(new EventDeliveryCallback() {			
-			@Override
-			public void onEvent(int anId, TxnSseEvent anEvent) {
-				addEvent(anId, anEvent);
-			}
-		});
+		if (eventReplicator!=null) {
+			eventReplicator.subscribe(new EventDeliveryCallback() {			
+				@Override
+				public void onEvent(int anId, TxnSseEvent anEvent) {
+					addEvent(anId, anEvent);
+				}
+			});
+		}
 	}
 
 	public void emitEvent(TxnSseEvent anEvent) {

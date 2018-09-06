@@ -1,6 +1,9 @@
 package com.ddv.test.rest;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,7 +40,8 @@ public class TransactionController {
 	}
 	
 	@RequestMapping(path="txn", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<Transaction> getTxns() {
+	public List<Transaction> getTxns(HttpServletResponse aResponse) throws IOException {
+		aResponse.sendRedirect("http://localhost:9090/hello");
 		return service.findTransactions();
 	}
 
