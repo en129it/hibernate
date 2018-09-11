@@ -25,11 +25,11 @@ public class SseController {
 	
     @RequestMapping(path="proxy/sse/subscribe", method=RequestMethod.GET)
 	public SseEmitter subscribe(HttpServletRequest aRequest, HttpServletResponse aResponse) throws Exception {
-    	aResponse.sendRedirect("https://www.google.com");
-    	return null;
+//    	aResponse.sendRedirect("https://www.google.com");
+//    	return null;
     	
-//    	System.out.println("############################### subscribe");
-//		return sseService.createSseEmitterForSession(createHttpSession(aRequest).getId());
+    	System.out.println("############################### subscribe");
+		return sseService.createSseEmitterForSession(createHttpSession(aRequest).getId());
 	}
 
 	private HttpSession createHttpSession(HttpServletRequest aRequest) {

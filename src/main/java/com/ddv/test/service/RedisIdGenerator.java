@@ -28,6 +28,7 @@ public class RedisIdGenerator implements IdGenerator {
 	@Override
 	public int getNextId() {
 		Long rslt = connection.incr(idGeneratorKey);
+		System.out.println("#### redis.getNextId() " + rslt);
 		return rslt.intValue();
 	}
 

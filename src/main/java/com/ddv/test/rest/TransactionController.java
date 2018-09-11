@@ -16,17 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ddv.test.entity.Lock;
 import com.ddv.test.entity.Transaction;
 import com.ddv.test.model.TxnSearchFilter;
+import com.ddv.test.service.EventService;
 import com.ddv.test.service.TransactionService;
+import com.ddv.test.service.TxnSseEvent;
 
 @RestController
 public class TransactionController {
 
 	@Autowired
 	private TransactionService service;
+	@Autowired
+	private EventService eventService;
 	
 	@RequestMapping(path="txn/{txnId}/lock/{userId}/{action}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void acquireLock(@PathVariable("txnId") Long aTxnId, @PathVariable("userId") Long aUserId, @PathVariable("action") String aLockAction) {
-		
+		System.out.println("########################### acquirelock");
 	}
 	
 	@RequestMapping(path="txn/{txnId}/unlock/{userId}", method=RequestMethod.DELETE, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -59,6 +63,12 @@ public class TransactionController {
 	public void deleteAllLocks() {
 		int rslt = service.deleteAllLocks();
 		System.out.println("####### nb deleted locks = " + rslt);
+	}
+
+	@RequestMapping(path="redis", method=RequestMethod.GET)
+	public void redis() {
+		eventService.emitEvent(new TxnSseEvent("lock", 123L));
+		System.out.println("####### event emitted");
 	}
 	
 }

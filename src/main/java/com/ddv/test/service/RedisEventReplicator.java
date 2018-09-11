@@ -40,10 +40,14 @@ public class RedisEventReplicator implements IEventReplicator, MessageListener {
 		channel = aChannel;
 	}
 	
+	public ChannelTopic getChannel() {
+		return channel;
+	}
+	
 	@Override
 	public void emitEvent(int anId, TxnSseEvent anEvent) {
 		try {
-			redisTemplate.convertAndSend(channel.getTopic(), objectMapper.writeValueAsBytes(new IdentifiableTxnSseEvent(anId, anEvent)));
+			redisTemplate.convertAndSend(channel.getTopic(), objectMapper.writeValueAsString(new IdentifiableTxnSseEvent(anId, anEvent)));
 		} catch (JsonProcessingException ex) {
 			
 		}
@@ -56,6 +60,7 @@ public class RedisEventReplicator implements IEventReplicator, MessageListener {
 
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
+		System.out.println("######## redis on message ");
 		try {
 			IdentifiableTxnSseEvent rslt = objectMapper.readValue(message.getBody(), IdentifiableTxnSseEvent.class);
 			if (eventDeliveryCallback!=null) {

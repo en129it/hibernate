@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -15,7 +16,7 @@ public class PermissionEntrySetAccount {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="PERMISSION_ENTRY_SET_ACCOUNT_ID", precision=19)
+	@Column(name="PERMISSION_ENTRY_SET_ACCT_ID", precision=19)
 	private Long permissionEntrySetAccountId;
 	
 	@ManyToOne(optional=false)

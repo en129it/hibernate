@@ -31,6 +31,7 @@ public class EventService {
 	@PostConstruct
 	public void initService() {
 		if (eventReplicator!=null) {
+			System.out.println("###### event replicator defined");
 			eventReplicator.subscribe(new EventDeliveryCallback() {			
 				@Override
 				public void onEvent(int anId, TxnSseEvent anEvent) {
@@ -44,15 +45,21 @@ public class EventService {
 		int id = idGenerator.getNextId();
 		addEvent(id, anEvent);
 		if (eventReplicator!=null) {
+			System.out.println("###### emit event to redis");
 			eventReplicator.emitEvent(id, anEvent);
 		}
 	}
 	
 	private void addEvent(int anId, TxnSseEvent anEvent) {
-		eventIdToEventMap.put(anId, anEvent);
-		trimCache();
-		if (sseService!=null) {
-			sseService.emitEvent(anEvent);
+		TxnSseEvent oldEvent = eventIdToEventMap.put(anId, anEvent);
+		if (oldEvent==null) {
+			System.out.println("###### add event > new event");
+			trimCache();
+			if (sseService!=null) {
+				sseService.emitEvent(anEvent);
+			}
+		} else {
+			System.out.println("###### add event > already known event");
 		}
 	}
 	

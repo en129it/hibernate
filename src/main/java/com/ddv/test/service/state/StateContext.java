@@ -1,10 +1,20 @@
 package com.ddv.test.service.state;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.scheduling.TaskScheduler;
+
+import com.ddv.test.service.RedisEventReplicator.IdentifiableTxnSseEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * StateContext is the context used in a synchronization operation. The
@@ -12,7 +22,7 @@ import org.springframework.scheduling.TaskScheduler;
  * to influence the synchronization operation.
  *
  */
-public class StateContext {
+public class StateContext implements MessageListener {
 
 	/** The list of all the possible states during a synchronization operation. */
 	private static Class<? extends AbstractState>[] ALL_STATES = new Class[]{SyncAnnounceState.class, SynchronizingState.class, SynchronizedState.class};
@@ -27,6 +37,12 @@ public class StateContext {
 	private AbstractState currentState;
 	/** The time interval in msec between two consecutive synchronization of the cache with the source of trust. */
 	private int cacheRefreshTimeIntervalInMsec;
+	/** The Redis template that facilitates the communication with Redis. */
+	private StringRedisTemplate redisTemplate;
+	/** The Redis channel to be used for the exchange of synchronization messages with the other application instances. */
+	private ChannelTopic channel;
+	/** The Java to JSON bi-directional converter. */
+	private ObjectMapper objectMapper;
 	
 	
 	/**
@@ -34,15 +50,29 @@ public class StateContext {
 	 * @param aCacheRefreshTimeIntervalInMin The time interval in msec between
 	 * two consecutive synchronization of the cache with the source of trust.
 	 * @param aTaskScheduler Non-null task scheduler.
+	 * @param aChannel Non-null Redis channel to be used for the exchange
+	 * of synchronization messages with the other application instances.
 	 */
-	public StateContext(int aCacheRefreshTimeIntervalInMin, TaskScheduler aTaskScheduler) {
+	public StateContext(int aCacheRefreshTimeIntervalInSec, TaskScheduler aTaskScheduler, StringRedisTemplate aRedisTemplate, ChannelTopic aChannel) {
 		taskScheduler = aTaskScheduler;
+		redisTemplate = aRedisTemplate;
+		channel = aChannel;
+		objectMapper = new ObjectMapper();
 		invalidateServiceId();
-		cacheRefreshTimeIntervalInMsec = aCacheRefreshTimeIntervalInMin * 60000;
+		cacheRefreshTimeIntervalInMsec = aCacheRefreshTimeIntervalInSec * 1000;
 		for (Class<? extends AbstractState> possibleState : ALL_STATES) {
 			stateTemplates.add(createState(possibleState));
 		}
 		changeState(SyncAnnounceState.class, 0);
+	}
+	
+	/**
+	 * Get the Redis channel to be used for the exchange of synchronization 
+	 * messages with the other application instances.
+	 * @return Non-null channel topic.
+	 */
+	public ChannelTopic getChannel() {
+		return channel;
 	}
 	
 	/**
@@ -180,20 +210,6 @@ public class StateContext {
 	}
 	
 	/**
-	 * Method to be called each time an external service instance wants to 
-	 * notify this instance about a state change in its synchronization 
-	 * operation.
-	 * @param anOtherInstanceId Unique identifier assigned to that external
-	 * service instance. That identifier will be used to determine if that
-	 * instance has precedence to perform operations over this service instance.
-	 * @param anOtherStateCode Non-null code of the new state into which the 
-	 * external service instance entered.
-	 */
-	public synchronized void onMessage(long anOtherInstanceId, String anOtherStateCode) {
-		currentState.onMessage(anOtherInstanceId, getStateTypeOfCode(anOtherStateCode));
-	}
-	
-	/**
 	 * Return a date that is the current time with the addition of a given 
 	 * number of msec.
 	 * @param anOffsetInMsec A positive or negative number of msec.
@@ -212,7 +228,11 @@ public class StateContext {
 	 * asking this service to cancel operations or cancel their own operations).
 	 */
 	void broadcastCurrentState() {
-		// Broadcast message (serviceId, currentState.getStatusCode())
+		try {
+			redisTemplate.convertAndSend(channel.getTopic(), objectMapper.writeValueAsString(new SyncMessage(serviceId, currentState.getStateCode())));
+		} catch (JsonProcessingException ex) {
+			
+		}
 	}
 	
 	/**
@@ -236,5 +256,20 @@ public class StateContext {
 	 */
 	int getCacheRefreshTimeIntervalInMsec() {
 		return cacheRefreshTimeIntervalInMsec;
+	}
+
+	//**************************************************************************
+	//**** MessageListener implementation **************************************
+	//**************************************************************************
+	
+	@Override
+	public synchronized void onMessage(Message aMessage, byte[] aPattern) {
+		try {
+			SyncMessage syncMessage = objectMapper.readValue(aMessage.getBody(), SyncMessage.class);
+			currentState.onMessage(syncMessage.getServiceId(), getStateTypeOfCode(syncMessage.getStatusCode()));
+		} catch (IOException ex) {
+			
+		}
+		
 	}
 }
