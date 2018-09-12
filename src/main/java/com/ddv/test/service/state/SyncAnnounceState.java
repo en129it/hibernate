@@ -41,6 +41,7 @@ public class SyncAnnounceState extends AbstractState {
 	
 	@Override
 	public synchronized void onStateEnter() {
+		System.out.println("#### onStateEnter");
 		timeInMsecBeforeRedoAnnouncement = -1;
 		
 		SyncAnnounceState that = this;
@@ -48,14 +49,17 @@ public class SyncAnnounceState extends AbstractState {
 		context.broadcastCurrentState();
 		context.getTaskScheduler().schedule(new Runnable() {
 			public void run() {
+				System.out.println("   #### run " + timeInMsecBeforeRedoAnnouncement);
 				synchronized(that) {
 					if (timeInMsecBeforeRedoAnnouncement>-1) {
 						context.getTaskScheduler().schedule(new Runnable() {
 							public void run() {
+								System.out.println("   #### re-invoke onStateChange");
 								onStateEnter();
 							}
 						}, context.addOffsetToCurrentTimestamp(timeInMsecBeforeRedoAnnouncement));
 					} else {
+						System.out.println("   #### change state ");
 						context.changeState(SynchronizingState.class, 0);
 					}
 				}
